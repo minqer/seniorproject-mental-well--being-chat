@@ -21,6 +21,7 @@ Route::prefix('v1')->group(function() {
 
     //Route::get('/test/{message}', 'API\APIController@test');
     route::get('/send/{sendId}/{receiveId}/{msg}', 'API\APIController@send');
- 
+                           
+    route::get('/get/{sendId}/{receiveId}/{lastn}', 'API\APIController@get');
     
 });
