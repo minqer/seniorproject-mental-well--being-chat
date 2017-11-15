@@ -116,8 +116,8 @@ class APIController extends Controller
         return response("done");
          }
     
-    private function checkToken($token){
-        return $token == '1234';
+    private function checkToken($token,$id){
+        return $token == '1234'&& $id == 'qwerty';
     }
     }
 
