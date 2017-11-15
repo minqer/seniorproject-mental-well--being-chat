@@ -9,11 +9,15 @@ use Predis\Client;
 
 class APIController extends Controller
 {
-     public function send($sendId,$receiveId,$msg)
+    public $seperator = '$#^&^#$';
+     public function send(Request $request,$sendId,$receiveId,$msg)
      {
          
-         //DB::insert('insert into datalog (sender, receive, textdata) values (?, ?, ?)', [$sendId,$receiveId,$msg]);
-         
+         $token = $request->input('token');
+         if(!$this->checkToken($token)){
+             return response()->json(['error' => 'Not authorized.'],403);
+         }
+    
          if($sendId > $receiveId){
              $first = $receiveId;
              $last = $sendId;
@@ -24,7 +28,9 @@ class APIController extends Controller
          }
          
          $client = new \Predis\Client();
-         $client ->lpush("$first:$last", "$sendId:$msg");
+         $ms = round(microtime(true)*1000);
+         $messageid = $client->incr('messageid');
+         $client ->lpush("$first". $this->seperator ."$last", "$sendId". $this->seperator ."$msg". $this->seperator ."$ms". $this->seperator ."$messageid");
          return response()->json(array(
                                        'result' => 'ok',
                                        'message' => 'message is sent',
@@ -32,10 +38,13 @@ class APIController extends Controller
                                        ))->header('Access-Control-Allow-Origin', '*');;
      }
     
-    public function get($sendId,$receiveId,$lastn)
+    public function get(Request $request,$sendId,$receiveId,$lastn)
     {
         
-       // $message = DB::select('SELECT * FROM `datalog` where (sender =? and receive =?) or (sender =? and receive =?) order by id DESC limit ?', [$sendId,$receiveId,$receiveId,$sendId,$lastn]);
+       $token = $request->input('token');
+        if(!$this->checkToken($token)){
+            return response()->json(['error' => 'Not authorized.'],403);
+        }
         
         if($sendId > $receiveId){
             $first = $receiveId;
@@ -47,15 +56,16 @@ class APIController extends Controller
         }
         
         $client = new \Predis\Client();
-        $messages = $client ->lrange("$first:$last", 0,$lastn);
+        $messages = $client ->lrange("$first". $this->seperator ."$last", 0,$lastn);
         
         $newMessages = array();
         foreach ($messages as $message) {
-            $tmp = explode(":", $message);
+            $tmp = explode($this->seperator, $message);
             $newMessage = array(
                                 'sender' => $tmp[0],
                                 'receive' => $tmp[0] == $sendId ? $receiveId : $sendId,
                                 'textdata' => $tmp[1],
+                                'time' => $tmp[2],
                                 );
             
             $newMessages[] = $newMessage;
@@ -68,12 +78,46 @@ class APIController extends Controller
     }
 
     
-    public function test($message){
-             return response()->json(array(
-                 'result' => 'ok',
-                 'message' => 'message is sent',
-                 'data' => null
-             ));
+    public function save2db(){
+            $client = new \Predis\Client();
+            $keys = $client->keys('*');
+        
+        foreach($keys as $key){
+            if($key != "messageid"){
+                $messages = $client->lrange($key,0,-1);
+                
+                $tmp = explode($this->seperator,$key);
+                $maxid = DB::select('SELECT COALESCE(max(id),0) as maxid FROM `datalog` where (sender =? and receive =?) or (sender =? and receive =?) ', [$tmp[0],$tmp[1],$tmp[1],$tmp[0]]);
+                
+                $maxid = $maxid[0];
+                $maxid = $maxid->maxid;
+                
+                foreach($messages as $message){
+                        $parts = explode($this->seperator,$message);
+                        $sender = $parts[0];
+                        $message = $parts[1];
+                        $time = $parts[2];
+                        $messageid = $parts[3];
+                    if($sender == $tmp[0]){
+                        $receiver = $tmp[1];
+                    }
+                    else{
+                        $receiver = $tmp[0];
+                    }
+                 
+                    if($messageid > $maxid){
+                        DB::insert('insert into datalog (id,sender, receive, textdata, time) values (?,?,?, ?, ?)', [$messageid,$sender,$receiver,$message,$time]);
+                    }
+                }
+            }
+            
+        }
+        
+        return response("done");
          }
+    
+    private function checkToken($token){
+        return $token == '1234';
+    }
     }
 
