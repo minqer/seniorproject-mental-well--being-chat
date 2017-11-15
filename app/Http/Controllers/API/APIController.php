@@ -14,7 +14,8 @@ class APIController extends Controller
      {
          
          $token = $request->input('token');
-         if(!$this->checkToken($token)){
+         $id = $request->input('id');
+         if(!$this->checkToken($token,$id)){
              return response()->json(['error' => 'Not authorized.'],403);
          }
     
