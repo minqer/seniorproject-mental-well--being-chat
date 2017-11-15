@@ -42,8 +42,9 @@ class APIController extends Controller
     public function get(Request $request,$sendId,$receiveId,$lastn)
     {
         
-       $token = $request->input('token');
-        if(!$this->checkToken($token)){
+        $token = $request->input('token');
+        $id = $request->input('id');
+        if(!$this->checkToken($token,$id)){
             return response()->json(['error' => 'Not authorized.'],403);
         }
         
