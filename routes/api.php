@@ -20,8 +20,13 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::prefix('v1')->group(function() {
 
     Route::get('/save2db', 'API\APIController@save2db');
+
     Route::get('/send/{sendId}/{receiveId}/{msg}', 'API\APIController@send');
                            
     Route::get('/get/{sendId}/{receiveId}/{lastn}', 'API\APIController@get');
+
+    Route::post('/chatbot/webhook', 'API\APIController@webhook');
+    
+    Route::get('/chatbot/webhook', 'API\APIController@webhookVerify');
     
 });
