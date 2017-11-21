@@ -21,7 +21,15 @@ Route::prefix('v1')->group(function() {
 
     Route::get('/save2db', 'API\APIController@save2db');
     Route::get('/send/{sendId}/{receiveId}/{msg}', 'API\APIController@send');
-                           
     Route::get('/get/{sendId}/{receiveId}/{lastn}', 'API\APIController@get');
     
+    Route::prefix('miniapp')->group(function(){
+        Route::prefix('meditate')->group(function(){
+            Route::get('/start/{userId}/{packageId}', 'API\APIController@meditateStart');
+            Route::get('/stop/{userId}/{packageId}', 'API\APIController@meditateStop');
+        });
+        Route::prefix('breathpractice')->group(function(){
+                                                                           
+        });
+    });
 });

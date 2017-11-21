@@ -118,6 +118,30 @@ class APIController extends Controller
         return response("done");
          }
     
+     public function meditateStart(Request $request,$userId,$packageId){
+         $start = round(microtime(true)*1000);
+         DB::insert('insert into meditate_history (userid,start, stop, package) values (?,?,?,?)', [$userId,$start,-1,$packageId]);
+         $insertedId = DB::select('SELECT LAST_INSERT_ID() as last_id');
+         $insertedId = $insertedId[0];
+         $insertedId = $insertedId->last_id;
+         
+         return response()->json(array(
+                'result' => 'OK',
+                'meditate_id' => $insertedId
+        ));
+     }
+    public function meditateStop(Request $userId, $insertedId){
+        $stop = round(microtime(true)*1000);
+        DB::update('update meditate_history set stop = (?) WHERE id = (?)', [$stop,$insertedId]);
+        
+        return response()->json(array(
+               'result' => 'OK',
+               'meditate_id' => $insertedId
+        ));
+
+    }
+    
+   
     private function checkToken($token,$id){
         return $token == '1234'&& $id == 'qwerty';
     }
