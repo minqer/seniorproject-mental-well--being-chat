@@ -64,7 +64,11 @@
         function send() {
             var msg = $("#textbox").val();
             $.ajax({
-                    url: `https://www.punyapat.me/web/tech/minq/api/v1/send/${myId}/${friendId}/${msg}?id=qwerty&token=1234`,
+                    url: `https://www.punyapat.me/web/tech/minq/api/v1/send/${myId}/${friendId}?id=qwerty&token=1234`,
+                    method: 'post',
+                    data: {
+                        msg: msg
+                    }
                 })
                 .done(function(result) {
                     $("#textbox").val('');
