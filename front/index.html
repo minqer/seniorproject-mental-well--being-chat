@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!-- Standard Meta -->
+    <meta charset="utf-8" />
+    <link rel="stylesheet" type="text/css" href="semantic.css">
+    <script src="https://code.jquery.com/jquery-3.2.1.js"></script>
+    <script src="semantic.js"></script>
+    <style>
+        #chatbox {
+            width: 300px;
+            height: 500px;
+            background: rgb(220, 255, 245);
+            margin-bottom: 5px;
+            border-radius: 9px;
+            overflow: auto;
+        }
+        
+        #textbox {
+            padding: 8px;
+            border: 1px solid #ccc;
+            width: 225px;
+        }
+        
+        .left {
+            text-align: left;
+        }
+        
+        .right {
+            text-align: right;
+        }
+        
+        .right .innerbox {
+            display: inline-block;
+            background: #1acc1a;
+        }
+        
+        .left .innerbox {
+            display: inline-block;
+            background: #c3b9b9;
+        }
+        
+        .innerbox {
+            display: inline-block;
+            background: #ccc;
+            padding: 5px;
+            margin-bottom: 5px;
+            border-radius: 9px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="chatbox">
+    </div>
+    <input id="textbox" type="text">
+    <button class="ui button" onclick="send()">send</button>
+
+    <script>
+        var myId = 5;
+        var friendId = 4;
+
+        function send() {
+            var msg = $("#textbox").val();
+            $.ajax({
+                    url: `https://www.punyapat.me/web/tech/minq/api/v1/send/${myId}/${friendId}/${msg}?id=qwerty&token=1234`,
+                })
+                .done(function(result) {
+                    $("#textbox").val('');
+                })
+        }
+
+        function get() {
+            $.ajax({
+                    url: `https://www.punyapat.me/web/tech/minq/api/v1/get/${myId}/${friendId}/100?id=qwerty&token=1234`,
+                })
+                .done(function(result) {
+                    var messages = result.data; //get json array of message
+                    $('#chatbox').html('');
+                    for (i = 0; i < messages.length; i++) {
+                        var message = messages[i];
+                        console.log(message.textdata);
+
+                        if (message.sender == myId) {
+                            $('#chatbox').append(
+                                `
+                                    <div class="right">
+                                        <div class="innerbox">
+                                            ${message.textdata}
+                                        <div>
+                                    </div>
+                                `
+                            );
+                        } else {
+                            $('#chatbox').append(
+                                `
+                                    <div class="left">
+                                        <div class="innerbox">
+                                            ${message.textdata}
+                                        <div>
+                                    </div>
+                                `
+                            );
+                        }
+                    }
+                })
+        }
+        setInterval(get, 500);
+    </script>
+</body>
+
+</html>
