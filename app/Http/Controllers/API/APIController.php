@@ -10,9 +10,9 @@ use Predis\Client;
 class APIController extends Controller
 {
     public $seperator = '$#^&^#$';
-     public function send(Request $request,$sendId,$receiveId,$msg)
+     public function send(Request $request,$sendId,$receiveId)
      {
-         
+         $msg = str_replace('$#^&^#$','...',$msg->input('msg'));
          $token = $request->input('token');
          $id = $request->input('id');
          if(!$this->checkToken($token,$id)){
@@ -130,17 +130,47 @@ class APIController extends Controller
                 'meditate_id' => $insertedId
         ));
      }
-    public function meditateStop(Request $userId, $insertedId){
+    public function meditateStop(Request $request, $userId, $insertedId){
         $stop = round(microtime(true)*1000);
         DB::update('update meditate_history set stop = (?) WHERE id = (?)', [$stop,$insertedId]);
         
+        $length = DB::select('select (stop-start) AS avgtime from meditate_history WHERE id = ?', [$insertedId]);
+        $length = $length[0];
+        $length = round($length->n/1000);
         return response()->json(array(
                'result' => 'OK',
-               'meditate_id' => $insertedId
+               'meditate_id' => $length
         ));
 
     }
     
+    public function breathStart(Request $request, $userId){
+        $start = round(microtime(true)*1000);
+        DB::insert('insert into breath_history (userid,start, stop) values (?,?,?)', [$userId,$start,-1]);
+        $insertedId = DB::select('SELECT LAST_INSERT_ID() as last_id');
+        $insertedId = $insertedId[0];
+        $insertedId = $insertedId->last_id;
+        
+        return response()->json(array(
+                                      'result' => 'OK',
+                                      'breath_id' => $insertedId
+                                      ));
+
+    }
+    
+    public function breathStop(Request $request, $userId, $insertedId){
+        $stop = round(microtime(true)*1000);
+        DB::update('update breath_history set stop = (?) WHERE id = (?)', [$stop,$insertedId]);
+        
+        $length = DB::select('select (stop-start) AS avgtime from breath_history WHERE id = ?', [$insertedId]);
+        $length = $length[0];
+        $length = round($length->avgtime/1000);
+        return response()->json(array(
+                                      'result' => 'OK',
+                                      'breath_id' => $length
+                                      ));
+        
+    }
    
     private function checkToken($token,$id){
         return $token == '1234'&& $id == 'qwerty';
