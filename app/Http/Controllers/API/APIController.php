@@ -19,7 +19,7 @@ class APIController extends Controller
             ),
             array(
                 'desc' => 'stop meditate',
-                'url' => "/miniapp/meditate/start/{userId}/{insertedId}",
+                'url' => "/miniapp/meditate/stop/{userId}/{insertedId}",
             ),
         ]);
     }
