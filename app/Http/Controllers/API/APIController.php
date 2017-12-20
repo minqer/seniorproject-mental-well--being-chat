@@ -40,7 +40,14 @@ class APIController extends Controller
         if(!$this->checkToken($token,$id)){
             return response()->json(['error' => 'Not authorized.'],403);
         }
-
+        
+        if(trim($message)== ''){
+            return response()->json(array(
+                                          'result' => 'ok',
+                                          'message' => 'message cannot empty',
+                                          'data' => null
+                                          ))->header('Access-Control-Allow-Origin', '*');
+        }
         if($sendId > $receiveId){
             $first = $receiveId;
             $last = $sendId;
