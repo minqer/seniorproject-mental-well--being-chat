@@ -1,0 +1,290 @@
+<html class="gr__semantic-ui_com">
+<head>
+	<title>Meditate</title>
+  <!-- Standard Meta -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <!-- Site Properties -->
+  <style>
+   #container{
+  border:1px solid #DADADA;
+  border-radius :20px;
+  width:700px;
+  margin:50px auto;
+  padding:20px;
+  text-align:center;
+  background : #DADADA;
+}
+
+#timer{ 
+  color:#f00; 
+  font-size:50px; 
+  margin:10px auto;
+  border : 5px solid red;
+  border-radius:50%;
+  width:200px;
+  height:200px;
+  overflow:hidden;
+  position:relative;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  cursor:default;
+}
+
+#time{
+  margin-top:70px;
+  z-index : 1;
+  position:relative;
+}
+
+#filler{
+  background : #ddffcc;
+  height: 0px;
+  width: 200px;
+  position:absolute;
+  bottom:0;
+}
+
+#buttons button { 
+  background:#4da6ff; 
+  border:none; 
+  color:#fff; 
+  cursor:pointer; 
+  padding:10px; 
+  width:90px; 
+  margin:20px auto;
+  font-size:14px;
+  height : 50px;
+  border-radius : 50px;
+}
+
+#buttons button#ten{
+  background : #0c0;
+}
+
+#buttons button#fifteen{
+  background : #080;
+}
+
+#buttons button#stop{
+  background : #f00;
+}
+  </style>
+  <link href="css/bootstrap.css" rel='stylesheet' type='text/css' />
+  <script src="js/jquery.min.js"></script>
+  <link href="css/style.css" rel='stylesheet' type='text/css' />
+  <script
+  src="https://code.jquery.com/jquery-3.2.1.js"
+  integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="
+  crossorigin="anonymous"></script>
+  
+	<script>
+			$(function() {
+				var pull 		= $('#pull');
+					menu 		= $('nav ul');
+					menuHeight	= menu.height();
+				$(pull).on('click', function(e) {
+					e.preventDefault();
+					menu.slideToggle();
+				});
+				$(window).resize(function(){
+	        		var w = $(window).width();
+	        		if(w > 320 && menu.is(':hidden')) {
+	        			menu.removeAttr('style');
+	        		}
+	    		});
+			});
+	</script>
+	
+	<link href='http://fonts.googleapis.com/css?family=Oswald:400,300,700' rel='stylesheet' type='text/css'>
+	<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700,800' rel='stylesheet' type='text/css'>
+</head>
+
+<body>
+
+<!----- start-header---->
+			<div id="home" class="header">
+					<div class="top-header">
+						<div class="container">
+						<div class="logo">
+							<a href="index.html"><img src="images/logo.png" title="doctor" /></a>
+						</div>
+						<!----start-top-nav---->
+						 <nav class="top-nav">
+							<ul class="top-nav">
+								<li><a href="index.tml" class="scroll">Home</a></li>
+								<li><a href="relax.tml" class="scroll">relax</a></li>
+								<li><a href="" class="scroll"></a></li>
+								<li><a href="" class="scroll"></a></li>
+							</ul>
+							<a href="#" id="pull"><img src="images/menu-icon.png" title="menu" /></a>
+						</nav>
+						<div class="clearfix"> </div>
+					</div>
+				</div>
+			</div>
+<!----- //End-header---->
+
+<div id="pomodoro-app">
+  <div id="container">
+    <div id="timer">
+      <div id="time">
+        <span id="minutes">00</span>
+        <span id="colon">:</span>
+        <span id="seconds">00</span>
+      </div>
+      <div id="filler"></div>
+    </div>
+
+    <div id="buttons">
+      <button id="five" onclick="startMeditatefive()">5 min</button>
+      <button id="ten" onclick="startMeditateten()">10 min</button>
+      <button id="fifteen" onclick="startMeditatefifteen()">15 min</button>
+      <button id="stop" onclick="stopMeditate()">Stop</button>
+    </div>
+  </div>
+</div>
+
+<script>
+	var insertedId = 0;
+	
+	function startMeditatefive() {
+	var userId = 2918;
+	var packageId = 1234;
+		$.ajax({
+			url: `http://punyapat.me/web/tech/minq/api/v1/miniapp/meditate/start/${userId}/${packageId}`,
+		})
+		.done(function(result){
+				insertedId = result.meditate_id;
+		})
+	}
+	
+	function startMeditateten() {
+	var userId = 2918;
+	var packageId = 1234;
+		$.ajax({
+			url: `http://punyapat.me/web/tech/minq/api/v1/miniapp/meditate/start/${userId}/${packageId}`,
+		})
+		.done(function(result){
+				insertedId = result.meditate_id;
+		})
+	}
+		
+	function startMeditatefifteen() {
+	var userId = 2918;
+	var packageId = 1234;
+		$.ajax({
+			url: `http://punyapat.me/web/tech/minq/api/v1/miniapp/meditate/start/${userId}/${packageId}`,
+		})
+		.done(function(result){
+				insertedId = result.meditate_id;
+		})
+	}
+	
+	function stopMeditate() {
+	var userId = 2918;
+		$.ajax({
+			url: `http://punyapat.me/web/tech/minq/api/v1/miniapp/meditate/stop/${userId}/${insertedId}`,
+		})
+		.done(function(result){
+				alert(`${result.meditate_time} seconds`);
+				$("#stop").val();
+		})
+	}
+	
+	var pomodoro = {
+    started : false,
+    minutes : 0,
+    seconds : 0,
+    fillerHeight : 0,
+    fillerIncrement : 0,
+    interval : null,
+    minutesDom : null,
+    secondsDom : null,
+    fillerDom : null,
+    init : function(){
+      var self = this;
+      this.minutesDom = $('#minutes');
+      this.secondsDom = $('#seconds');
+      this.fillerDom = $('#filler');
+      this.interval = setInterval(function(){
+        self.intervalCallback.apply(self);
+      }, 1000);
+      $('#five').click(function(){
+        self.startfive.apply(self);
+      });
+      $('#ten').click(function(){
+        self.startten.apply(self);
+      });
+      $('#fifteen').click(function(){
+        self.startfifteen.apply(self);
+      });
+      $('#stop').click(function(){
+        self.stopTimer.apply(self);
+      });
+    },
+    resetVariables : function(mins, secs, started){
+      this.minutes = mins;
+      this.seconds = secs;
+      this.started = started;
+      this.fillerIncrement = 200/(this.minutes*60);
+      this.fillerHeight = 0;  
+    },
+    startfive: function() {
+	  startMeditatefive();
+      this.resetVariables(5, 0, true);
+    },
+    startten : function(){
+	  startMeditateten();
+      this.resetVariables(10, 0, true);
+    },
+    startfifteen : function(){
+	  startMeditatefifteen();
+      this.resetVariables(15, 0, true);
+    },
+    stopTimer : function(){
+	  stopMeditate();
+      this.resetVariables(0, 0, false);
+      this.updateDom();
+    },
+    toDoubleDigit : function(num){
+      if(num < 10) {
+        return "0" + parseInt(num, 10);
+      }
+      return num;
+    },
+    updateDom : function(){
+      this.minutesDom.text(this.toDoubleDigit(this.minutes));
+      this.secondsDom.text(this.toDoubleDigit(this.seconds));
+      this.fillerHeight = this.fillerHeight + this.fillerIncrement;
+      this.fillerDom.css('height', this.fillerHeight + 'px');
+    },
+    intervalCallback : function(){
+      if(!this.started) return false;
+      if(this.seconds == 0) {
+        if(this.minutes == 0) {
+          this.timerComplete();
+          return;
+        }
+        this.seconds = 59;
+        this.minutes--;
+      } else {
+        this.seconds--;
+      }
+      this.updateDom();
+    },
+    timerComplete : function(){
+      this.started = false;
+      this.fillerHeight = 0;
+	  var audio = new Audio('alarm.m4a');
+	  audio.play();
+    }
+};
+$(document).ready(function(){
+  pomodoro.init();
+});
+</script>
+
+</body>
