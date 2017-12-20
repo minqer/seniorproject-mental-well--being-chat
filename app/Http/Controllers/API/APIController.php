@@ -192,7 +192,7 @@ class APIController extends Controller
          return response()->json(array(
                 'result' => 'OK',
                 'meditate_id' => $insertedId
-        ));
+        ))->header('Access-Control-Allow-Origin', '*');
      }
     public function meditateStop(Request $request, $userId, $insertedId){
         $stop = round(microtime(true)*1000);
@@ -200,11 +200,11 @@ class APIController extends Controller
         
         $length = DB::select('select (stop-start) AS avgtime from meditate_history WHERE id = ?', [$insertedId]);
         $length = $length[0];
-        $length = round($length->n/1000);
+        $length = round($length->avgtime/1000);
         return response()->json(array(
                'result' => 'OK',
-               'meditate_id' => $length
-        ));
+               'meditate_time' => $length
+        ))->header('Access-Control-Allow-Origin', '*');
 
     }
     
@@ -239,5 +239,5 @@ class APIController extends Controller
     private function checkToken($token,$id){
         return $token == '1234'&& $id == 'qwerty';
     }
-    }
+}
 
