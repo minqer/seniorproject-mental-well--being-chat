@@ -61,9 +61,37 @@ class APIController extends Controller
                                     ))->header('Access-Control-Allow-Origin', '*');
     }
     
-    public function get2(Request $request,$sendId,$receiveId,$lastn){
-        $targetIndex = 10;
-        get($request,$sendId,$receiveId,$lastn,$targetIndex);
+    public function get_recent(Request $request,$sendId,$receiveId,$messageId, $lastn){
+        $token = $request->input('token');
+        $id = $request->input('id');
+        if(!$this->checkToken($token,$id)){
+            return response()->json(['error' => 'Not authorized.'],403);
+        }
+        
+        if($sendId > $receiveId){
+            $first = $receiveId;
+            $last = $sendId;
+        }
+        else{
+            $first = $sendId;
+            $last = $receiveId;
+        }
+        
+        $client = new \Predis\Client('tcp://localhost:6381');
+        $messages = $client ->lrange("$first". $this->seperator ."$last", 0 ,$lastn);
+        $targetIndex = -1;
+        $i=0;
+        foreach ($messages as $message) {
+            $tmp = explode($this->seperator, $message);
+            $i++;
+            if($messageId == $tmp[3]){
+                $targetIndex = $i;
+                
+                break;
+            }
+        }
+        
+        return $this->get($request,$sendId,$receiveId,$lastn+$targetIndex,$targetIndex);
     }
 
     public function get(Request $request,$sendId,$receiveId,$lastn,$targetIndex=0)
@@ -85,16 +113,18 @@ class APIController extends Controller
         }
         
         $client = new \Predis\Client('tcp://localhost:6381');
-        $messages = $client ->lrange("$first". $this->seperator ."$last", $targetIndex,$lastn);
+        $messages = $client ->lrange("$first". $this->seperator ."$last", $targetIndex,$lastn-1);
         
         $newMessages = array();
         foreach ($messages as $message) {
             $tmp = explode($this->seperator, $message);
             $newMessage = array(
+                                
                                 'sender' => $tmp[0],
                                 'receive' => $tmp[0] == $sendId ? $receiveId : $sendId,
                                 'textdata' => $tmp[1],
                                 'time' => $tmp[2],
+                                'message_id' => $tmp[3],
                                 );
             
             $newMessages[] = $newMessage;

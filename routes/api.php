@@ -23,6 +23,7 @@ Route::prefix('v1')->group(function() {
     Route::post('/send/{sendId}/{receiveId}', 'API\APIController@send_post');
     Route::get('/send/{sendId}/{receiveId}/{message}', 'API\APIController@send_get');
     Route::get('/get/{sendId}/{receiveId}/{lastn}', 'API\APIController@get');
+    Route::get('/recent/{sendId}/{receiveId}/{messageId}/{lastn}', 'API\APIController@get_recent');                       
     
     Route::prefix('miniapp')->group(function(){
         Route::prefix('meditate')->group(function(){
