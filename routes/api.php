@@ -20,7 +20,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::prefix('v1')->group(function() {
 
     Route::get('/save2db', 'API\APIController@save2db');
-    Route::post('/send/{sendId}/{receiveId}', 'API\APIController@send');
+    Route::post('/send/{sendId}/{receiveId}', 'API\APIController@send_post');
+    Route::get('/send/{sendId}/{receiveId}/{message}', 'API\APIController@send_get');
     Route::get('/get/{sendId}/{receiveId}/{lastn}', 'API\APIController@get');
     
     Route::prefix('miniapp')->group(function(){

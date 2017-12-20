@@ -24,34 +24,42 @@ class APIController extends Controller
         ]);
     }
 
-     public function send(Request $request,$sendId,$receiveId)
-     {
-         $msg = str_replace('$#^&^#$','...',$request->input('msg'));
-         $token = $request->input('token');
-         $id = $request->input('id');
-         if(!$this->checkToken($token,$id)){
-             return response()->json(['error' => 'Not authorized.'],403);
-         }
-    
-         if($sendId > $receiveId){
-             $first = $receiveId;
-             $last = $sendId;
-         }
-         else{
-             $first = $sendId;
-             $last = $receiveId;
-         }
-         
-         $client = new \Predis\Client('tcp://localhost:6381');
-         $ms = round(microtime(true)*1000);
-         $messageid = $client->incr('messageid');
-         $client ->lpush("$first". $this->seperator ."$last", "$sendId". $this->seperator ."$msg". $this->seperator ."$ms". $this->seperator ."$messageid");
-         return response()->json(array(
-                                       'result' => 'ok',
-                                       'message' => 'message is sent',
-                                       'data' => null
-                                       ))->header('Access-Control-Allow-Origin', '*');;
-     }
+    public function send_get(Request $request,$sendId,$receiveId,$message){
+        return $this->send($request,$sendId,$receiveId,$message);
+    }
+
+    public function send_post(Request $request,$sendId,$receiveId)
+    {
+        $message = str_replace('$#^&^#$','...',$request->input('msg'));
+        return $this->send($request,$sendId,$receiveId,$message);
+    }
+
+    public function send(Request $request,$sendId,$receiveId,$message){
+        $token = $request->input('token');
+        $id = $request->input('id');
+        if(!$this->checkToken($token,$id)){
+            return response()->json(['error' => 'Not authorized.'],403);
+        }
+
+        if($sendId > $receiveId){
+            $first = $receiveId;
+            $last = $sendId;
+        }
+        else{
+            $first = $sendId;
+            $last = $receiveId;
+        }
+        
+        $client = new \Predis\Client('tcp://localhost:6381');
+        $ms = round(microtime(true)*1000);
+        $messageid = $client->incr('messageid');
+        $client ->lpush("$first". $this->seperator ."$last", "$sendId". $this->seperator ."$message". $this->seperator ."$ms". $this->seperator ."$messageid");
+        return response()->json(array(
+                                    'result' => 'ok',
+                                    'message' => 'message is sent',
+                                    'data' => null
+                                    ))->header('Access-Control-Allow-Origin', '*');
+    }
     
     public function get2(Request $request,$sendId,$receiveId,$lastn){
         $targetIndex = 10;
