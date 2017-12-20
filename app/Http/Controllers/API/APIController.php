@@ -10,9 +10,23 @@ use Predis\Client;
 class APIController extends Controller
 {
     public $seperator = '$#^&^#$';
+
+    public function list(){
+        return response()->json([
+            array(
+                'desc' => 'start meditate',
+                'url' => "/miniapp/meditate/start/{userId}/{packageId}",
+            ),
+            array(
+                'desc' => 'stop meditate',
+                'url' => "/miniapp/meditate/start/{userId}/{insertedId}",
+            ),
+        ]);
+    }
+
      public function send(Request $request,$sendId,$receiveId)
      {
-         $msg = str_replace('$#^&^#$','...',$msg->input('msg'));
+         $msg = str_replace('$#^&^#$','...',$request->input('msg'));
          $token = $request->input('token');
          $id = $request->input('id');
          if(!$this->checkToken($token,$id)){
@@ -28,7 +42,7 @@ class APIController extends Controller
              $last = $receiveId;
          }
          
-         $client = new \Predis\Client();
+         $client = new \Predis\Client('tcp://localhost:6381');
          $ms = round(microtime(true)*1000);
          $messageid = $client->incr('messageid');
          $client ->lpush("$first". $this->seperator ."$last", "$sendId". $this->seperator ."$msg". $this->seperator ."$ms". $this->seperator ."$messageid");
@@ -39,7 +53,12 @@ class APIController extends Controller
                                        ))->header('Access-Control-Allow-Origin', '*');;
      }
     
-    public function get(Request $request,$sendId,$receiveId,$lastn)
+    public function get2(Request $request,$sendId,$receiveId,$lastn){
+        $targetIndex = 10;
+        get($request,$sendId,$receiveId,$lastn,$targetIndex);
+    }
+
+    public function get(Request $request,$sendId,$receiveId,$lastn,$targetIndex=0)
     {
         
         $token = $request->input('token');
@@ -57,8 +76,8 @@ class APIController extends Controller
             $last = $receiveId;
         }
         
-        $client = new \Predis\Client();
-        $messages = $client ->lrange("$first". $this->seperator ."$last", 0,$lastn);
+        $client = new \Predis\Client('tcp://localhost:6381');
+        $messages = $client ->lrange("$first". $this->seperator ."$last", $targetIndex,$lastn);
         
         $newMessages = array();
         foreach ($messages as $message) {

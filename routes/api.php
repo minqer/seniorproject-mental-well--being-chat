@@ -34,4 +34,6 @@ Route::prefix('v1')->group(function() {
                                                                            
         });
     });
+
+    Route::get('/list', 'API\APIController@list');
 });
