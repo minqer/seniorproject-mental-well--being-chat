@@ -1,0 +1,109 @@
+<html class="gr__semantic-ui_com">
+<head>
+	<title>Relax</title>
+  <!-- Standard Meta -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <!-- Site Properties -->
+  <style>
+
+  </style>
+  <link href="css/bootstrap.css" rel='stylesheet' type='text/css' />
+  <script src="js/jquery.min.js"></script>
+  <link href="css/style.css" rel='stylesheet' type='text/css' />
+  <script
+  src="https://code.jquery.com/jquery-3.2.1.js"
+  integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="
+  crossorigin="anonymous"></script>
+  
+	<script>
+			$(function() {
+				var pull 		= $('#pull');
+					menu 		= $('nav ul');
+					menuHeight	= menu.height();
+				$(pull).on('click', function(e) {
+					e.preventDefault();
+					menu.slideToggle();
+				});
+				$(window).resize(function(){
+	        		var w = $(window).width();
+	        		if(w > 320 && menu.is(':hidden')) {
+	        			menu.removeAttr('style');
+	        		}
+	    		});
+			});
+	</script>
+	
+	<link href='http://fonts.googleapis.com/css?family=Oswald:400,300,700' rel='stylesheet' type='text/css'>
+	<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700,800' rel='stylesheet' type='text/css'>
+</head>
+
+<body>
+
+<!----- start-header---->
+			<div id="home" class="header">
+					<div class="top-header">
+						<div class="container">
+						<div class="logo">
+							<a href="index.html"><img src="images/logo.png" title="doctor" /></a>
+						</div>
+						<!----start-top-nav---->
+						 <nav class="top-nav">
+							<ul class="top-nav">
+								<li><a href="index.tml" class="scroll">Home</a></li>
+								<li></li>
+								<li></li>
+								<li></li>
+							</ul>
+							<a href="#" id="pull"><img src="images/menu-icon.png" title="menu" /></a>
+						</nav>
+						<div class="clearfix"> </div>
+					</div>
+				</div>
+			</div>
+<!----- //End-header---->
+
+<!--- services --->
+			<div id="services" class="services">
+				<div class="container">
+					<div class="header services-header text-center">
+						<h2>Realx</h2>
+						<p>Choose relax method that you like</p>
+					</div>
+					<!---- service-grids--->
+					<div class="service-grids">
+						<div class="col-md-3">
+							<div class="service-grid text-center">
+								<a href="music.html"><span class="s1-icon"> </span></a>
+								<h3><a href="music.html">music</a></h3>
+							</div>
+						</div>
+						<div class="col-md-3">
+							<div class="service-grid text-center">
+								<a href="meditate.html"><span class="s2-icon"> </span></a>
+								<h3><a href="meditate.html">meditate</a></h3>
+							</div>
+						</div>
+						<div class="col-md-3">
+							<div class="service-grid text-center">
+								<a href="breath.html"><span class="s3-icon"> </span></a>
+								<h3><a href="breath.html">practice breathing</a></h3>
+							</div>
+						</div>
+						<div class="col-md-3">
+							<div class="service-grid text-center">
+								<a href="form.html"><span class="s4-icon"> </span></a>
+								<h3><a href="form.html">mental form</a></h3>
+							</div>
+						</div>
+						<div class="clearfix"> </div>
+					</div>
+					<!----//service-grids--->
+				</div>
+				
+			</div>
+<!--- services --->
+
+
+
+</body>
