@@ -21,6 +21,14 @@ class APIController extends Controller
                 'desc' => 'stop meditate',
                 'url' => "/miniapp/meditate/stop/{userId}/{insertedId}",
             ),
+            array(
+                'desc' => 'start breathpractice',
+                'url' => "/miniapp/breathpractice/start/{userId}",
+            ),
+            array(
+                'desc' => 'stop breathpractice',
+                'url' => "/miniapp/breathpractice/stop/{userId}/{insertedId}",
+            ),
         ]);
     }
 
