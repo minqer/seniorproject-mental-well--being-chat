@@ -1,0 +1,231 @@
+<html class="gr__semantic-ui_com">
+<head>
+	<title>Breathing Exercise</title>
+  <!-- Standard Meta -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <!-- Site Properties -->
+  <link href="css/bootstrap.css" rel='stylesheet' type='text/css' />
+  <script src="js/jquery.min.js"></script>
+  <link href="css/style.css" rel='stylesheet' type='text/css' />
+  <script
+  src="https://code.jquery.com/jquery-3.2.1.js"
+  integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="
+  crossorigin="anonymous"></script>
+	
+	<link href='http://fonts.googleapis.com/css?family=Oswald:400,300,700' rel='stylesheet' type='text/css'>
+	<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700,800' rel='stylesheet' type='text/css'>
+	<link href='https://fonts.googleapis.com/css?family=Roboto:100,300,500' rel='stylesheet' type='text/css'>
+
+	<style>
+@import url(https://fonts.googleapis.com/css?family=Open+Sans);
+
+html,body{
+  height: 100%;
+  width: 100%;
+  background: url(images/service-bg.png);
+}
+
+audio {
+  display: none;
+}
+
+#player {
+  overflow: hidden;
+  position: absolute;
+  margin-left: 450px;
+  margin-top: 50px;
+  background-color: rgba(255,255,255,0.8);
+  border-radius: 100%;
+  height: 400px;
+  width: 400px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 0 10px 5px rgba(0,0,0,0.2);
+}
+
+#button pButton {
+  padding:10px; 
+  width:90px; 
+  margin:20px auto;
+}
+
+#pButton {
+  margin-left: 130px;
+  position: relative;
+  outline: none;
+  align-self: center;
+}
+
+#sButton {
+	background-color: #21acde;
+    padding: 17px;
+    text-align: center;
+    margin-left: 220px;
+	margin-top: -39px;
+	border-radius: 4px;
+}
+
+.play {
+  height: 0;
+  width: 0;
+  padding: 0;
+  left: 10px;
+  background: transparent;
+  border: solid 20px;
+  border-color: transparent transparent transparent rgb(41,169,232); #21acde;
+}
+
+.pause {
+  left: -5px;
+  border: none;
+  height: 40px;
+  width: 0px;
+  background-color: rgb(41,169,232);
+  box-shadow: 20px 0 0 0 rgb(41,169,232);
+}
+
+.description {
+  margin: 15px;
+  align-self: center;
+}
+
+p {
+  margin: 0;
+}
+
+.song-name {
+  font-size: 20px;
+}
+
+.song-artist {
+  font-size: 16px;
+}
+
+.time {
+  display: flex;
+  align-content: center;
+  justify-content: center;
+  margin-top: 13px;
+  margin-right: 10px;
+}
+
+span {
+  font-size: 20px;
+}
+	</style>
+</head>
+
+<body>
+
+<!----- start-header---->
+			<div id="home" class="header">
+					<div class="top-header">
+						<div class="container">
+						<div class="logo">
+							<a href="index.html"><img src="images/logo.png" title="doctor" /></a>
+						</div>
+						<!----start-top-nav---->
+						 <nav class="top-nav">
+							<ul class="top-nav">
+								<li><a href="index.html" class="scroll">Home</a></li>
+								<li><a href="relax.html" class="scroll">Relax</a></li>
+								<li><a href="chat.html" class="scroll">Chat</a></li>
+								<li><a href="vdo.html" class="scroll">VDO Call</a></li>
+								<li><a href="fitbit.html" class="scroll">Fitbit</a></li>
+								<li><a href="" class="scroll"></a></li>
+							</ul>
+						</nav>
+						<div class="clearfix"> </div>
+					</div>
+				</div>
+			</div>
+<!----- //End-header---->
+
+<audio loop id="music" src="sound/exercise.mp3" type="audio/mp3" controls="controls" preload="auto" ontimeupdate="updateTime()">
+</audio>
+
+<div id="player">
+  <img style=" height: 200px;width: 100%;position: relative;align-self: center;" src="images/exercise.jpg" />
+  <div class="description">
+    <p class="song-name">Breathing Exercise</p>
+    <p class="song-artist">4 - 7 -8</p>
+  </div>
+	<div id="button">
+	<button id="pButton" onclick="play()" class="play"></button>
+	<button id="sButton" onclick="stop()" class="stop"></button>
+	</div>
+  <div class="time">
+    <span id="current">00:00</span>
+    <span> / </span>
+    <span id="total">00:00</span>
+  </div>
+</div>
+
+<script>
+
+var music = document.getElementById('music');
+var pButton = document.getElementById('pButton');
+var player = document.getElementById('player');
+
+$('#pButton').on('click', function() {
+  if (music.paused) {
+    music.play();
+    pButton.className = "";
+    pButton.className = "pause";
+  } else {
+    music.pause();
+    pButton.className = "";
+    pButton.className = "play";
+  }
+});
+
+var insertedId = 0;
+function play() {
+	var userId = 2918;
+		$.ajax({
+			url: `http://punyapat.me/web/tech/minq/api/v1/miniapp/breathpractice/start/${userId}`,
+		})
+		.done(function(result){
+				insertedId = result.breathing_id;
+		})
+	}
+	
+function stop() {
+	var userId = 2918;
+		$.ajax({
+			url: `http://punyapat.me/web/tech/minq/api/v1/miniapp/breathpractice/stop/${userId}/${insertedId}`,
+		})
+		.done(function(result){
+				swal("Your practice time",`${result.breathing_time} seconds`);
+				$("#sButton").val();
+		})
+	}
+
+
+function updateTime() {
+  var currTime = Math.floor(music.currentTime).toString(); 
+  var duration = Math.floor(music.duration).toString();
+
+  $('#current').text(formatSecondsAsTime(currTime));
+  $('#total').text(formatSecondsAsTime(duration));
+}
+
+function formatSecondsAsTime(secs, format) {
+  var hr  = Math.floor(secs / 3600);
+  var min = Math.floor((secs - (hr * 3600))/60);
+  var sec = Math.floor(secs - (hr * 3600) -  (min * 60));
+
+  if (min < 10){ 
+    min = "0" + min; 
+  }
+  if (sec < 10){ 
+    sec  = "0" + sec;
+  }
+  return min + ':' + sec;
+}
+//# sourceURL=pen.js
+</script>
+
+</body>
+</html>

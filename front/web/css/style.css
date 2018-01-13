@@ -552,7 +552,13 @@ div.slide-text-info {
 }
 /*--- team ----*/
 .team{
-	padding: 3em 0 5em 0;
+	padding-left: 13em;
+	padding-bottom: 5em;
+	padding-top: 3em;
+}
+.text{
+	textarea
+	
 }
 .team-member-grid{
 	width:20%;
@@ -577,7 +583,7 @@ div.slide-text-info {
 }
 .team-member-info h3 a{
 	color:#FFF;
-	font-size:0.8em;
+	font-size:0.6em;
 }
 .team-member-info h3 a:hover{
 	text-decoration:none;
@@ -625,8 +631,10 @@ div.slide-text-info {
 }
 .team-head{
 	background:none;
+
 }
 /*---- contact ----*/
+
 .map{
 	position:relative;
 }
@@ -815,6 +823,103 @@ div.slide-text-info {
 	-moz-opacity: 0;
 	filter: alpha(opacity=0);
 }
+
+/*---- relax ----*/
+.relax{
+	background:url(../images/service-bg.png);
+	padding: 3em 0;
+}
+.relax-header{
+	color: #FFF;
+	background: none;
+}
+.relax-header p{
+	color:#FFF;
+}
+.relax-header h2	{
+	color:#FFF;
+}
+/*--- relax-grid ---*/
+.relax-grids{
+	padding:3em;
+}
+.relax-grid{
+	
+}
+.relax-grid a span{
+	width: 224px;
+	height: 244px;
+	display: inline-block;
+	background: url(../images/relax-icons.png) no-repeat 0px 0px;
+	transition:0.5s all;
+	-webkit-transition:0.5s all;
+	-moz-transition:0.5s all;
+	-ms-transition:0.5s all;
+	-o-transition:0.5s all;
+}
+
+.relax-grid:hover a span{
+	opacity:0.5;
+}
+.relax-grid h3 a{
+	color: #fff;
+	text-transform: uppercase;
+	font-size: 0.875em;
+}
+.relax-grid h3 a:hover{
+	text-decoration:none;
+}
+
+.relax-grid a span.s2-icon{
+	background-position: -250px 0px;
+}
+.relax-grid a span.s3-icon{
+	background-position: -720px 0px;
+}
+
+.relax1-grid{
+	
+}
+
+.relax1-grid a span{
+	width: 224px;
+	height: 244px;
+	display: inline-block;
+	background: url(../images/relax1-icons.png) no-repeat 0px 0px;
+	transition:0.5s all;
+	-webkit-transition:0.5s all;
+	-moz-transition:0.5s all;
+	-ms-transition:0.5s all;
+	-o-transition:0.5s all;
+}
+
+.relax1-grid:hover a span{
+	opacity:0.5;
+}
+.relax1-grid h3 a{
+	color: #fff;
+	text-transform: uppercase;
+	font-size: 0.875em;
+}
+.relax1-grid h3 a:hover{
+	text-decoration:none;
+}
+
+.relax1-grid a span.s4-icon{
+	background-position: -250px 0px;
+}
+.relax1-grid a span.s5-icon{
+	background-position: -720px 0px;
+}
+/*---- relax ----*/
+
+/*---- meditate ----*/
+.meditate{
+	background:url(../images/service-bg.png);
+	padding: 3em 15em;
+}
+/*---- meditate ----*/
+
 /*---- responsive-design -----*/
 @media(max-width:1024px){
 	.slide-text-info h1 {
@@ -926,6 +1031,7 @@ div.slide-text-info {
 	}
 	.team-member-grids {
 		padding: 1.5em 0 0 0;
+		
 	}
 	.services {
 		padding: 2em 0 1em;
@@ -1021,6 +1127,7 @@ div.slide-text-info {
 	}
 	.team-member-grids {
 		padding: 1.5em 0 0 0;
+		margin:50px auto;
 	}
 	.services {
 		padding: 2em 0 1em;
